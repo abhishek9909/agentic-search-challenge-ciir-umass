@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agentic Search</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; max-width: 960px; margin: 0 auto; padding: 20px; }
+    h1 { margin-bottom: 16px; }
+    .search-bar { display: flex; gap: 8px; margin-bottom: 20px; }
+    .search-bar input {
+      flex: 1; padding: 10px 14px; font-size: 16px;
+      border: 1px solid #ccc; border-radius: 6px;
+    }
+    .search-bar button {
+      padding: 10px 20px; font-size: 16px; cursor: pointer;
+      background: #111; color: #fff; border: none; border-radius: 6px;
+    }
+    .search-bar button:disabled { background: #888; cursor: wait; }
+    #status { margin-bottom: 12px; color: #555; }
+    #error { color: #c00; margin-bottom: 12px; }
+    #meta { margin-bottom: 12px; font-size: 14px; color: #666; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #eee; }
+    th { background: #f5f5f5; position: sticky; top: 0; cursor: pointer; user-select: none; }
+    th:hover { background: #e8e8e8; }
+    td a { color: #06c; }
+    .rejected { padding: 20px; background: #fff3cd; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>Agentic Search</h1>
+  <div class="search-bar">
+    <input id="query" type="text" placeholder='e.g. "AI startups in healthcare"' />
+    <button id="btn" onclick="doSearch()">Search</button>
+  </div>
+  <div id="status"></div>
+  <div id="error"></div>
+  <div id="meta"></div>
+  <div id="results"></div>
+
+  <script>
+    const API = "http://localhost:8000";
+    const $q = document.getElementById("query");
+    const $btn = document.getElementById("btn");
+    const $status = document.getElementById("status");
+    const $error = document.getElementById("error");
+    const $meta = document.getElementById("meta");
+    const $results = document.getElementById("results");
+
+    // Allow Enter key
+    $q.addEventListener("keydown", (e) => { if (e.key === "Enter") doSearch(); });
+
+    // Current sort state
+    let currentData = null;
+    let sortCol = null;
+    let sortAsc = true;
+
+    async function doSearch() {
+      const query = $q.value.trim();
+      if (!query) return;
+
+      $btn.disabled = true;
+      $status.textContent = "Searching…";
+      $error.textContent = "";
+      $meta.textContent = "";
+      $results.innerHTML = "";
+      currentData = null;
+
+      try {
+        const res = await fetch(API + "/search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query }),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        currentData = data;
+        render(data);
+      } catch (e) {
+        $error.textContent = "Error: " + e.message;
+      } finally {
+        $btn.disabled = false;
+        $status.textContent = "";
+      }
+    }
+
+    function render(data) {
+      if (!data.analysis.is_topic_query) {
+        $results.innerHTML = `<div class="rejected">
+          <strong>Not a topic query.</strong><br>${data.analysis.reasoning}
+        </div>`;
+        return;
+      }
+
+      $meta.textContent =
+        `${data.entities.length} results · ${data.search_results_count} sources · ${data.processing_time.toFixed(1)}s`;
+
+      if (!data.entities.length) {
+        $results.innerHTML = "<p>No entities found.</p>";
+        return;
+      }
+
+      renderTable(data.columns, data.entities);
+    }
+
+    function renderTable(columns, entities) {
+      // Build rows from attributes
+      let rows = entities.map((e) => {
+        let row = {};
+        columns.forEach((c) => { row[c] = e.attributes[c] ?? ""; });
+        row._sources = e.sources || {};
+        return row;
+      });
+
+      // Sort if active
+      if (sortCol) {
+        rows.sort((a, b) => {
+          let va = (a[sortCol] ?? "").toString().toLowerCase();
+          let vb = (b[sortCol] ?? "").toString().toLowerCase();
+          // try numeric
+          let na = parseFloat(va.replace(/[^0-9.\-]/g, ""));
+          let nb = parseFloat(vb.replace(/[^0-9.\-]/g, ""));
+          if (!isNaN(na) && !isNaN(nb)) return sortAsc ? na - nb : nb - na;
+          return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+        });
+      }
+
+      let html = "<table><thead><tr>";
+      columns.forEach((c) => {
+        let arrow = sortCol === c ? (sortAsc ? " ↑" : " ↓") : "";
+        html += `<th onclick="toggleSort('${c}')">${c}${arrow}</th>`;
+      });
+      html += "</tr></thead><tbody>";
+      rows.forEach((row) => {
+        html += "<tr>";
+        columns.forEach((c) => {
+          let val = row[c] ?? "";
+          let src = row._sources[c];
+          if (src) {
+            html += `<td><a href="${src}" target="_blank" title="${src}">${val}</a></td>`;
+          } else {
+            html += `<td>${val}</td>`;
+          }
+        });
+        html += "</tr>";
+      });
+      html += "</tbody></table>";
+      $results.innerHTML = html;
+    }
+
+    function toggleSort(col) {
+      if (sortCol === col) { sortAsc = !sortAsc; }
+      else { sortCol = col; sortAsc = true; }
+      if (currentData) render(currentData);
+    }
+  </script>
+</body>
+</html>
