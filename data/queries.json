@@ -1,0 +1,591 @@
+{
+  "metadata": {
+    "description": "Topic queries for agentic search system - train and eval splits",
+    "version": "1.0",
+    "complexity_levels": {
+      "simple": "Single entity type with optional single location/domain filter",
+      "moderate": "Entity type with location AND one additional attribute",
+      "complex": "Multiple constraints, comparisons, or nested filtering required"
+    },
+    "categories": [
+      "restaurants_food",
+      "tech_startups",
+      "tools_software",
+      "education",
+      "healthcare",
+      "entertainment",
+      "travel",
+      "finance",
+      "sports",
+      "people",
+      "shopping",
+      "services"
+    ]
+  },
+  "train": [
+    {
+      "id": "t001",
+      "query": "AI startups in healthcare",
+      "category": "tech_startups",
+      "complexity": "simple",
+      "expected_entity_type": "company",
+      "expected_columns": ["name", "description", "focus_area", "funding", "location"],
+      "search_terms": "AI startups in healthcare",
+      "post_filters": []
+    },
+    {
+      "id": "t002",
+      "query": "top pizza places in Brooklyn",
+      "category": "restaurants_food",
+      "complexity": "simple",
+      "expected_entity_type": "restaurant",
+      "expected_columns": ["name", "address", "style", "price_range", "rating"],
+      "search_terms": "top pizza places in Brooklyn",
+      "post_filters": []
+    },
+    {
+      "id": "t003",
+      "query": "open source database tools",
+      "category": "tools_software",
+      "complexity": "simple",
+      "expected_entity_type": "software",
+      "expected_columns": ["name", "type", "license", "language", "description"],
+      "search_terms": "open source database tools",
+      "post_filters": []
+    },
+    {
+      "id": "t004",
+      "query": "best coworking spaces in Austin",
+      "category": "services",
+      "complexity": "simple",
+      "expected_entity_type": "place",
+      "expected_columns": ["name", "address", "price", "amenities", "rating"],
+      "search_terms": "best coworking spaces in Austin",
+      "post_filters": []
+    },
+    {
+      "id": "t005",
+      "query": "top machine learning conferences 2025",
+      "category": "education",
+      "complexity": "simple",
+      "expected_entity_type": "event",
+      "expected_columns": ["name", "date", "location", "focus", "submission_deadline"],
+      "search_terms": "top machine learning conferences 2025",
+      "post_filters": []
+    },
+    {
+      "id": "t006",
+      "query": "popular podcast apps",
+      "category": "tools_software",
+      "complexity": "simple",
+      "expected_entity_type": "app",
+      "expected_columns": ["name", "platform", "price", "features", "rating"],
+      "search_terms": "popular podcast apps",
+      "post_filters": []
+    },
+    {
+      "id": "t007",
+      "query": "electric vehicle manufacturers",
+      "category": "tech_startups",
+      "complexity": "simple",
+      "expected_entity_type": "company",
+      "expected_columns": ["name", "country", "flagship_model", "price_range", "year_founded"],
+      "search_terms": "electric vehicle manufacturers",
+      "post_filters": []
+    },
+    {
+      "id": "t008",
+      "query": "best hiking trails in Colorado",
+      "category": "travel",
+      "complexity": "simple",
+      "expected_entity_type": "trail",
+      "expected_columns": ["name", "location", "difficulty", "distance", "elevation_gain"],
+      "search_terms": "best hiking trails in Colorado",
+      "post_filters": []
+    },
+    {
+      "id": "t009",
+      "query": "coding bootcamps in New York",
+      "category": "education",
+      "complexity": "simple",
+      "expected_entity_type": "school",
+      "expected_columns": ["name", "duration", "cost", "format", "technologies_taught"],
+      "search_terms": "coding bootcamps in New York",
+      "post_filters": []
+    },
+    {
+      "id": "t010",
+      "query": "fintech companies in London",
+      "category": "finance",
+      "complexity": "simple",
+      "expected_entity_type": "company",
+      "expected_columns": ["name", "sector", "funding", "year_founded", "description"],
+      "search_terms": "fintech companies in London",
+      "post_filters": []
+    },
+    {
+      "id": "t011",
+      "query": "best gyms in San Francisco",
+      "category": "services",
+      "complexity": "simple",
+      "expected_entity_type": "gym",
+      "expected_columns": ["name", "address", "membership_price", "amenities", "rating"],
+      "search_terms": "best gyms in San Francisco",
+      "post_filters": []
+    },
+    {
+      "id": "t012",
+      "query": "climate tech startups",
+      "category": "tech_startups",
+      "complexity": "simple",
+      "expected_entity_type": "company",
+      "expected_columns": ["name", "focus_area", "funding", "location", "description"],
+      "search_terms": "climate tech startups",
+      "post_filters": []
+    },
+    {
+      "id": "t013",
+      "query": "best free project management tools",
+      "category": "tools_software",
+      "complexity": "simple",
+      "expected_entity_type": "software",
+      "expected_columns": ["name", "free_tier_limits", "key_features", "platform", "rating"],
+      "search_terms": "best free project management tools",
+      "post_filters": []
+    },
+    {
+      "id": "t014",
+      "query": "famous museums in Paris",
+      "category": "travel",
+      "complexity": "simple",
+      "expected_entity_type": "museum",
+      "expected_columns": ["name", "address", "specialty", "admission_price", "hours"],
+      "search_terms": "famous museums in Paris",
+      "post_filters": []
+    },
+    {
+      "id": "t015",
+      "query": "top cybersecurity companies",
+      "category": "tech_startups",
+      "complexity": "simple",
+      "expected_entity_type": "company",
+      "expected_columns": ["name", "specialty", "revenue", "headquarters", "year_founded"],
+      "search_terms": "top cybersecurity companies",
+      "post_filters": []
+    },
+    {
+      "id": "t016",
+      "query": "best coffee roasters in Portland",
+      "category": "restaurants_food",
+      "complexity": "simple",
+      "expected_entity_type": "business",
+      "expected_columns": ["name", "address", "specialty", "price_range", "rating"],
+      "search_terms": "best coffee roasters in Portland",
+      "post_filters": []
+    },
+    {
+      "id": "t017",
+      "query": "online learning platforms for programming",
+      "category": "education",
+      "complexity": "simple",
+      "expected_entity_type": "platform",
+      "expected_columns": ["name", "price", "courses_offered", "format", "certificate"],
+      "search_terms": "online learning platforms for programming",
+      "post_filters": []
+    },
+    {
+      "id": "t018",
+      "query": "venture capital firms in Silicon Valley",
+      "category": "finance",
+      "complexity": "simple",
+      "expected_entity_type": "company",
+      "expected_columns": ["name", "aum", "focus_sectors", "notable_investments", "partners"],
+      "search_terms": "venture capital firms in Silicon Valley",
+      "post_filters": []
+    },
+    {
+      "id": "t019",
+      "query": "best indie video games 2024",
+      "category": "entertainment",
+      "complexity": "simple",
+      "expected_entity_type": "game",
+      "expected_columns": ["name", "developer", "genre", "platform", "rating"],
+      "search_terms": "best indie video games 2024",
+      "post_filters": []
+    },
+    {
+      "id": "t020",
+      "query": "renewable energy companies in Germany",
+      "category": "tech_startups",
+      "complexity": "simple",
+      "expected_entity_type": "company",
+      "expected_columns": ["name", "energy_type", "revenue", "employees", "location"],
+      "search_terms": "renewable energy companies in Germany",
+      "post_filters": []
+    },
+    {
+      "id": "t021",
+      "query": "Asian restaurants in Chicago that serve halal food",
+      "category": "restaurants_food",
+      "complexity": "complex",
+      "expected_entity_type": "restaurant",
+      "expected_columns": ["name", "cuisine", "address", "price_range", "halal_certified"],
+      "search_terms": "Asian restaurants in Chicago",
+      "post_filters": ["halal"]
+    },
+    {
+      "id": "t022",
+      "query": "remote-friendly tech companies with good parental leave",
+      "category": "tech_startups",
+      "complexity": "complex",
+      "expected_entity_type": "company",
+      "expected_columns": ["name", "industry", "remote_policy", "parental_leave_weeks", "location"],
+      "search_terms": "remote-friendly tech companies",
+      "post_filters": ["good parental leave"]
+    },
+    {
+      "id": "t023",
+      "query": "vegan restaurants in Los Angeles with outdoor seating",
+      "category": "restaurants_food",
+      "complexity": "complex",
+      "expected_entity_type": "restaurant",
+      "expected_columns": ["name", "address", "price_range", "rating", "has_outdoor_seating"],
+      "search_terms": "vegan restaurants in Los Angeles",
+      "post_filters": ["outdoor seating"]
+    },
+    {
+      "id": "t024",
+      "query": "Python web frameworks with async support",
+      "category": "tools_software",
+      "complexity": "moderate",
+      "expected_entity_type": "framework",
+      "expected_columns": ["name", "async_support", "stars", "latest_version", "description"],
+      "search_terms": "Python web frameworks async support",
+      "post_filters": []
+    },
+    {
+      "id": "t025",
+      "query": "budget hotels in Tokyo near train stations",
+      "category": "travel",
+      "complexity": "complex",
+      "expected_entity_type": "hotel",
+      "expected_columns": ["name", "price_per_night", "nearest_station", "rating", "address"],
+      "search_terms": "budget hotels in Tokyo",
+      "post_filters": ["near train stations"]
+    },
+    {
+      "id": "t026",
+      "query": "SaaS companies with freemium models",
+      "category": "tech_startups",
+      "complexity": "moderate",
+      "expected_entity_type": "company",
+      "expected_columns": ["name", "product", "free_tier", "paid_price", "category"],
+      "search_terms": "SaaS companies freemium model",
+      "post_filters": []
+    },
+    {
+      "id": "t027",
+      "query": "best public high schools in Massachusetts",
+      "category": "education",
+      "complexity": "simple",
+      "expected_entity_type": "school",
+      "expected_columns": ["name", "city", "ranking", "student_count", "graduation_rate"],
+      "search_terms": "best public high schools in Massachusetts",
+      "post_filters": []
+    },
+    {
+      "id": "t028",
+      "query": "dog-friendly breweries in Denver",
+      "category": "restaurants_food",
+      "complexity": "moderate",
+      "expected_entity_type": "brewery",
+      "expected_columns": ["name", "address", "dog_policy", "beer_styles", "rating"],
+      "search_terms": "dog-friendly breweries in Denver",
+      "post_filters": []
+    },
+    {
+      "id": "t029",
+      "query": "biotech companies working on gene therapy",
+      "category": "healthcare",
+      "complexity": "moderate",
+      "expected_entity_type": "company",
+      "expected_columns": ["name", "therapy_target", "clinical_stage", "location", "funding"],
+      "search_terms": "biotech companies gene therapy",
+      "post_filters": []
+    },
+    {
+      "id": "t030",
+      "query": "women-led startups that raised Series A in 2024",
+      "category": "tech_startups",
+      "complexity": "complex",
+      "expected_entity_type": "company",
+      "expected_columns": ["name", "founder", "industry", "series_a_amount", "description"],
+      "search_terms": "women-led startups Series A 2024",
+      "post_filters": []
+    },
+    {
+      "id": "t031",
+      "query": "best noise cancelling headphones under $200",
+      "category": "shopping",
+      "complexity": "moderate",
+      "expected_entity_type": "product",
+      "expected_columns": ["name", "brand", "price", "battery_life", "rating"],
+      "search_terms": "best noise cancelling headphones under $200",
+      "post_filters": []
+    },
+    {
+      "id": "t032",
+      "query": "professional basketball players from Europe in the NBA",
+      "category": "sports",
+      "complexity": "moderate",
+      "expected_entity_type": "person",
+      "expected_columns": ["name", "country", "team", "position", "ppg"],
+      "search_terms": "European basketball players in NBA",
+      "post_filters": []
+    },
+    {
+      "id": "t033",
+      "query": "best Italian restaurants in Manhattan with prix fixe menus",
+      "category": "restaurants_food",
+      "complexity": "complex",
+      "expected_entity_type": "restaurant",
+      "expected_columns": ["name", "address", "prix_fixe_price", "cuisine_style", "rating"],
+      "search_terms": "best Italian restaurants in Manhattan",
+      "post_filters": ["prix fixe menu"]
+    },
+    {
+      "id": "t034",
+      "query": "no-code app builders",
+      "category": "tools_software",
+      "complexity": "simple",
+      "expected_entity_type": "tool",
+      "expected_columns": ["name", "price", "features", "integrations", "use_case"],
+      "search_terms": "no-code app builders",
+      "post_filters": []
+    },
+    {
+      "id": "t035",
+      "query": "AI art generators",
+      "category": "tools_software",
+      "complexity": "simple",
+      "expected_entity_type": "tool",
+      "expected_columns": ["name", "price", "model", "features", "output_quality"],
+      "search_terms": "AI art generators",
+      "post_filters": []
+    },
+    {
+      "id": "t036",
+      "query": "coworking spaces in Berlin with 24/7 access",
+      "category": "services",
+      "complexity": "complex",
+      "expected_entity_type": "place",
+      "expected_columns": ["name", "address", "price", "has_24_7_access", "amenities"],
+      "search_terms": "coworking spaces in Berlin",
+      "post_filters": ["24/7 access"]
+    },
+    {
+      "id": "t037",
+      "query": "sustainable fashion brands",
+      "category": "shopping",
+      "complexity": "simple",
+      "expected_entity_type": "brand",
+      "expected_columns": ["name", "price_range", "materials", "certifications", "website"],
+      "search_terms": "sustainable fashion brands",
+      "post_filters": []
+    },
+    {
+      "id": "t038",
+      "query": "telemedicine platforms in the US",
+      "category": "healthcare",
+      "complexity": "simple",
+      "expected_entity_type": "platform",
+      "expected_columns": ["name", "services", "price", "insurance_accepted", "app_rating"],
+      "search_terms": "telemedicine platforms in the US",
+      "post_filters": []
+    },
+    {
+      "id": "t039",
+      "query": "data science job boards",
+      "category": "services",
+      "complexity": "simple",
+      "expected_entity_type": "website",
+      "expected_columns": ["name", "url", "job_types", "price_for_employers", "features"],
+      "search_terms": "data science job boards",
+      "post_filters": []
+    },
+    {
+      "id": "t040",
+      "query": "best board games for adults",
+      "category": "entertainment",
+      "complexity": "simple",
+      "expected_entity_type": "game",
+      "expected_columns": ["name", "players", "playtime", "genre", "rating"],
+      "search_terms": "best board games for adults",
+      "post_filters": []
+    }
+  ],
+  "eval": [
+    {
+      "id": "e001",
+      "query": "top ramen shops in Tokyo",
+      "category": "restaurants_food",
+      "complexity": "simple",
+      "expected_entity_type": "restaurant",
+      "expected_columns": ["name", "address", "ramen_style", "price_range", "rating"],
+      "search_terms": "top ramen shops in Tokyo",
+      "post_filters": []
+    },
+    {
+      "id": "e002",
+      "query": "AI companies working on autonomous vehicles",
+      "category": "tech_startups",
+      "complexity": "moderate",
+      "expected_entity_type": "company",
+      "expected_columns": ["name", "technology", "funding", "partnerships", "location"],
+      "search_terms": "AI companies autonomous vehicles",
+      "post_filters": []
+    },
+    {
+      "id": "e003",
+      "query": "free meditation apps",
+      "category": "tools_software",
+      "complexity": "simple",
+      "expected_entity_type": "app",
+      "expected_columns": ["name", "platform", "free_features", "premium_price", "rating"],
+      "search_terms": "free meditation apps",
+      "post_filters": []
+    },
+    {
+      "id": "e004",
+      "query": "Mexican restaurants in Austin with live music",
+      "category": "restaurants_food",
+      "complexity": "complex",
+      "expected_entity_type": "restaurant",
+      "expected_columns": ["name", "address", "price_range", "has_live_music", "rating"],
+      "search_terms": "Mexican restaurants in Austin",
+      "post_filters": ["live music"]
+    },
+    {
+      "id": "e005",
+      "query": "edtech startups in India",
+      "category": "tech_startups",
+      "complexity": "simple",
+      "expected_entity_type": "company",
+      "expected_columns": ["name", "product", "funding", "users", "year_founded"],
+      "search_terms": "edtech startups in India",
+      "post_filters": []
+    },
+    {
+      "id": "e006",
+      "query": "best standing desks under $500",
+      "category": "shopping",
+      "complexity": "moderate",
+      "expected_entity_type": "product",
+      "expected_columns": ["name", "brand", "price", "height_range", "rating"],
+      "search_terms": "best standing desks under $500",
+      "post_filters": []
+    },
+    {
+      "id": "e007",
+      "query": "national parks in Utah",
+      "category": "travel",
+      "complexity": "simple",
+      "expected_entity_type": "park",
+      "expected_columns": ["name", "location", "area", "highlights", "best_season"],
+      "search_terms": "national parks in Utah",
+      "post_filters": []
+    },
+    {
+      "id": "e008",
+      "query": "GraphQL API tools and clients",
+      "category": "tools_software",
+      "complexity": "simple",
+      "expected_entity_type": "tool",
+      "expected_columns": ["name", "type", "language", "features", "license"],
+      "search_terms": "GraphQL API tools and clients",
+      "post_filters": []
+    },
+    {
+      "id": "e009",
+      "query": "affordable dental clinics in Miami that accept Medicaid",
+      "category": "healthcare",
+      "complexity": "complex",
+      "expected_entity_type": "clinic",
+      "expected_columns": ["name", "address", "services", "accepts_medicaid", "rating"],
+      "search_terms": "affordable dental clinics in Miami",
+      "post_filters": ["accepts Medicaid"]
+    },
+    {
+      "id": "e010",
+      "query": "robotics companies in Boston",
+      "category": "tech_startups",
+      "complexity": "simple",
+      "expected_entity_type": "company",
+      "expected_columns": ["name", "focus", "funding", "products", "year_founded"],
+      "search_terms": "robotics companies in Boston",
+      "post_filters": []
+    },
+    {
+      "id": "e011",
+      "query": "best true crime podcasts",
+      "category": "entertainment",
+      "complexity": "simple",
+      "expected_entity_type": "podcast",
+      "expected_columns": ["name", "host", "episodes", "platform", "rating"],
+      "search_terms": "best true crime podcasts",
+      "post_filters": []
+    },
+    {
+      "id": "e012",
+      "query": "co-living spaces in Lisbon for digital nomads",
+      "category": "travel",
+      "complexity": "moderate",
+      "expected_entity_type": "accommodation",
+      "expected_columns": ["name", "price_per_month", "amenities", "wifi_speed", "location"],
+      "search_terms": "co-living spaces in Lisbon digital nomads",
+      "post_filters": []
+    },
+    {
+      "id": "e013",
+      "query": "what is the meaning of life",
+      "category": null,
+      "complexity": null,
+      "expected_entity_type": null,
+      "is_topic_query": false,
+      "notes": "Philosophical question, not a topic/entity query. Should be rejected by classifier."
+    },
+    {
+      "id": "e014",
+      "query": "how do I fix a leaky faucet",
+      "category": null,
+      "complexity": null,
+      "expected_entity_type": null,
+      "is_topic_query": false,
+      "notes": "How-to question, not a topic/entity query. Should be rejected."
+    },
+    {
+      "id": "e015",
+      "query": "tell me a joke",
+      "category": null,
+      "complexity": null,
+      "expected_entity_type": null,
+      "is_topic_query": false,
+      "notes": "Conversational request, not a topic/entity query. Should be rejected."
+    }
+  ],
+  "negative_examples": {
+    "description": "Queries that should NOT be treated as topic queries by the classifier",
+    "queries": [
+      "What is photosynthesis?",
+      "How do I reset my password?",
+      "Tell me about World War II",
+      "What's the weather today?",
+      "Translate 'hello' to Spanish",
+      "Write me a poem about cats",
+      "What's 2 + 2?",
+      "Who is the president of the United States?",
+      "How do I cook pasta?",
+      "Explain quantum computing"
+    ]
+  }
+}
