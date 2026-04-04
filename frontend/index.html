@@ -33,6 +33,9 @@
   <h1>Agentic Search</h1>
   <div class="search-bar">
     <input id="query" type="text" placeholder='e.g. "AI startups in healthcare"' />
+    <label style="display:flex;align-items:center;gap:4px;font-size:14px;white-space:nowrap">
+      <input type="checkbox" id="rb" /> Review Bomb
+    </label>
     <button id="btn" onclick="doSearch()">Search</button>
   </div>
   <div id="status"></div>
@@ -69,10 +72,11 @@
       currentData = null;
 
       try {
+        const rb = document.getElementById("rb").checked;
         const res = await fetch(API + "/search", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query }),
+          body: JSON.stringify({ query, review_bomb: rb }),
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();

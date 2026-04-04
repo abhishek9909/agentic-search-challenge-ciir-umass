@@ -40,6 +40,7 @@ FRONTEND_DIR = os.path.join(
 
 class SearchRequest(BaseModel):
     query: str
+    review_bomb: bool = False
 
 
 @app.get("/health")
@@ -57,7 +58,7 @@ def search(req: SearchRequest):
     except ValueError as e:
         raise HTTPException(500, str(e))
 
-    result = run(req.query.strip(), config)
+    result = run(req.query.strip(), config, enable_review_bomb=req.review_bomb)
     return result.to_dict()
 
 

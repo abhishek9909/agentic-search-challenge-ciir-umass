@@ -17,6 +17,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("agentic_search")
 
+
 # ── Configuration ────────────────────────────────────────────────────────────
 @dataclass
 class Config:
@@ -32,7 +33,7 @@ class Config:
     scrape_delay: float = 0.5          # politeness delay between scrapes
 
     def __post_init__(self):
-        load_dotenv()        
+        load_dotenv()
         self.anthropic_api_key = self.anthropic_api_key or os.getenv("ANTHROPIC_API_KEY", "")
         self.tavily_api_key = self.tavily_api_key or os.getenv("TAVILY_API_KEY", "")
 
@@ -108,35 +109,35 @@ def truncate_text(text: str, max_chars: int) -> str:
     return truncated + "..."
 
 
-def safe_json_parse(text: str) -> Optional[dict]:
+def safe_json_parse(text: str) -> Optional[dict | list]:
     """Try to parse JSON from LLM output, handling common issues."""
-    # strip markdown code fences
-    cleaned = text.strip()
-    if cleaned.startswith("```"):
-        lines = cleaned.split("\n")
-        # remove first and last lines (``` markers)
-        lines = [l for l in lines if not l.strip().startswith("```")]
-        cleaned = "\n".join(lines)
+    import re
 
+    cleaned = text.strip()
+
+    # Strategy 1: Strip markdown code fences (```json ... ``` or ``` ... ```)
+    fence_pattern = re.compile(r"^```(?:json|JSON)?\s*\n(.*?)\n\s*```\s*$", re.DOTALL)
+    m = fence_pattern.match(cleaned)
+    if m:
+        cleaned = m.group(1).strip()
+
+    # Strategy 2: Try direct parse
     try:
         return json.loads(cleaned)
     except json.JSONDecodeError:
-        # try to find JSON object in the text
-        start = cleaned.find("{")
-        end = cleaned.rfind("}") + 1
+        pass
+
+    # Strategy 3: Find the outermost JSON structure (array or object)
+    # Try array first since our extraction prompt asks for arrays
+    for open_ch, close_ch in [("[", "]"), ("{", "}")]:
+        start = cleaned.find(open_ch)
+        end = cleaned.rfind(close_ch)
         if start >= 0 and end > start:
             try:
-                return json.loads(cleaned[start:end])
+                return json.loads(cleaned[start:end + 1])
             except json.JSONDecodeError:
-                pass
-        # try to find JSON array
-        start = cleaned.find("[")
-        end = cleaned.rfind("]") + 1
-        if start >= 0 and end > start:
-            try:
-                return json.loads(cleaned[start:end])
-            except json.JSONDecodeError:
-                pass
+                continue
+
     return None
 
 
