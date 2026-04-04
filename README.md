@@ -302,6 +302,44 @@ Each query is annotated with: category, complexity level (simple/moderate/comple
 
 ---
 
+## Deployment
+
+The app is ready to deploy on any platform that runs Python or Docker. Here are the two easiest free options:
+
+### Option A: Render (recommended — free tier, no credit card)
+
+1. Push your code to a GitHub repo
+2. Go to [render.com](https://render.com), sign in with GitHub
+3. Click **New → Web Service**, connect your repo
+4. Render auto-detects the `render.yaml` — or configure manually:
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Start Command:** `uvicorn api.server:app --host 0.0.0.0 --port $PORT`
+5. Add environment variables: `ANTHROPIC_API_KEY` and `TAVILY_API_KEY`
+6. Deploy — you'll get a URL like `https://agentic-search-xxxx.onrender.com`
+
+Note: Render's free tier spins down after 15 min of inactivity. First request after idle takes ~30s to cold-start.
+
+### Option B: Railway (fast, $5 free trial credit, no card)
+
+1. Push your code to GitHub
+2. Go to [railway.app](https://railway.app), sign in with GitHub
+3. Click **New Project → Deploy from GitHub Repo**
+4. Railway auto-detects Python and runs uvicorn
+5. Add env vars: `ANTHROPIC_API_KEY`, `TAVILY_API_KEY`
+6. Deploy — live URL generated automatically
+
+### Option C: Docker (anywhere)
+
+```bash
+docker build -t agentic-search .
+docker run -p 8000:8000 \
+  -e ANTHROPIC_API_KEY=sk-ant-... \
+  -e TAVILY_API_KEY=tvly-... \
+  agentic-search
+```
+
+---
+
 ## Known Limitations
 
 1. **Schema inconsistency** — The same query may produce slightly different column names across runs (e.g., `"price"` vs `"price_range"`). There's no schema registry enforcing consistency.

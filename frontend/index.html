@@ -3,37 +3,107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agentic Search</title>
+  <title>CIIR Agentic Search Challenge</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, sans-serif; max-width: 960px; margin: 0 auto; padding: 20px; }
-    h1 { margin-bottom: 16px; }
-    .search-bar { display: flex; gap: 8px; margin-bottom: 20px; }
-    .search-bar input {
-      flex: 1; padding: 10px 14px; font-size: 16px;
-      border: 1px solid #ccc; border-radius: 6px;
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 1100px; margin: 0 auto; padding: 32px 20px;
+      color: #1a1a2e; background: #f8f9fb;
     }
+
+    h1 { font-size: 22px; font-weight: 600; margin-bottom: 20px; color: #1a1a2e; }
+
+    /* ── Search bar ─────────────────────────────────── */
+    .search-bar {
+      display: flex; gap: 8px; margin-bottom: 24px;
+      background: #fff; padding: 8px; border-radius: 10px;
+      border: 1px solid #e0e4ea;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .search-bar input[type="text"] {
+      flex: 1; padding: 10px 14px; font-size: 15px;
+      border: none; outline: none; background: transparent;
+    }
+    .search-bar label {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 13px; color: #555; white-space: nowrap;
+      padding: 0 8px; cursor: pointer; user-select: none;
+    }
+    .search-bar label input[type="checkbox"] { accent-color: #4f6df5; }
     .search-bar button {
-      padding: 10px 20px; font-size: 16px; cursor: pointer;
-      background: #111; color: #fff; border: none; border-radius: 6px;
+      padding: 10px 22px; font-size: 14px; font-weight: 500; cursor: pointer;
+      background: #4f6df5; color: #fff; border: none; border-radius: 7px;
+      transition: background 0.15s;
     }
-    .search-bar button:disabled { background: #888; cursor: wait; }
-    #status { margin-bottom: 12px; color: #555; }
-    #error { color: #c00; margin-bottom: 12px; }
-    #meta { margin-bottom: 12px; font-size: 14px; color: #666; }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #eee; }
-    th { background: #f5f5f5; position: sticky; top: 0; cursor: pointer; user-select: none; }
-    th:hover { background: #e8e8e8; }
-    td a { color: #06c; }
-    .rejected { padding: 20px; background: #fff3cd; border-radius: 6px; }
+    .search-bar button:hover { background: #3b57d9; }
+    .search-bar button:disabled { background: #a4b0d6; cursor: wait; }
+
+    /* ── Status / meta ──────────────────────────────── */
+    #status { margin-bottom: 12px; color: #777; font-size: 14px; }
+    #error { color: #d32f2f; margin-bottom: 12px; font-size: 14px; }
+    #meta {
+      margin-bottom: 16px; font-size: 13px; color: #888;
+      display: flex; gap: 16px;
+    }
+    #meta span {
+      background: #eef1f6; padding: 4px 10px; border-radius: 5px;
+    }
+    .rejected {
+      padding: 20px; background: #fff8e6; border: 1px solid #f0dfa0;
+      border-radius: 8px; font-size: 14px; color: #7a6a1e;
+    }
+
+    /* ── Table ───────────────────────────────────────── */
+    .table-wrap {
+      background: #fff; border-radius: 10px; overflow: hidden;
+      border: 1px solid #e0e4ea;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th {
+      text-align: left; padding: 11px 12px;
+      background: #f1f3f8; color: #4a5068; font-weight: 600; font-size: 12px;
+      text-transform: uppercase; letter-spacing: 0.4px;
+      border-bottom: 2px solid #e0e4ea;
+      position: sticky; top: 0; cursor: pointer; user-select: none;
+      white-space: nowrap;
+      transition: background 0.12s;
+    }
+    thead th:hover { background: #e4e8f1; }
+    thead th .arrow { font-size: 10px; margin-left: 3px; opacity: 0.5; }
+    thead th.sorted .arrow { opacity: 1; color: #4f6df5; }
+    tbody tr { transition: background 0.1s; }
+    tbody tr:hover { background: #f7f8fc; }
+    tbody td {
+      padding: 10px 12px; border-bottom: 1px solid #f0f1f5;
+      color: #2d2d3a; line-height: 1.45; vertical-align: top;
+      max-width: 280px;
+    }
+    tbody tr:nth-child(even) { background: #fafbfd; }
+    tbody tr:nth-child(even):hover { background: #f0f2f8; }
+
+    /* ── Source link icon ────────────────────────────── */
+    .src-link {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; margin-left: 5px;
+      border-radius: 4px; background: #eef1f6; color: #4f6df5;
+      text-decoration: none; font-size: 11px;
+      vertical-align: middle; flex-shrink: 0;
+      transition: background 0.12s, color 0.12s;
+    }
+    .src-link:hover { background: #4f6df5; color: #fff; }
+    .src-link svg { width: 12px; height: 12px; }
+
+    .cell-content { display: flex; align-items: flex-start; gap: 2px; }
+    .cell-text { flex: 1; }
   </style>
 </head>
 <body>
-  <h1>Agentic Search</h1>
+  <h1>&#x1F50D; CIIR Agentic Search Challenge</h1>
   <div class="search-bar">
-    <input id="query" type="text" placeholder='e.g. "AI startups in healthcare"' />
-    <label style="display:flex;align-items:center;gap:4px;font-size:14px;white-space:nowrap">
+    <input id="query" type="text" placeholder='Try "AI startups in healthcare" or "best pizza in Brooklyn"' />
+    <label>
       <input type="checkbox" id="rb" /> Review Bomb
     </label>
     <button id="btn" onclick="doSearch()">Search</button>
@@ -44,7 +114,7 @@
   <div id="results"></div>
 
   <script>
-    const API = "http://localhost:8000";
+    const API = window.location.origin;
     const $q = document.getElementById("query");
     const $btn = document.getElementById("btn");
     const $status = document.getElementById("status");
@@ -52,10 +122,8 @@
     const $meta = document.getElementById("meta");
     const $results = document.getElementById("results");
 
-    // Allow Enter key
     $q.addEventListener("keydown", (e) => { if (e.key === "Enter") doSearch(); });
 
-    // Current sort state
     let currentData = null;
     let sortCol = null;
     let sortAsc = true;
@@ -65,9 +133,10 @@
       if (!query) return;
 
       $btn.disabled = true;
-      $status.textContent = "Searching…";
+      $btn.textContent = "Searching\u2026";
+      $status.textContent = "";
       $error.textContent = "";
-      $meta.textContent = "";
+      $meta.innerHTML = "";
       $results.innerHTML = "";
       currentData = null;
 
@@ -86,7 +155,7 @@
         $error.textContent = "Error: " + e.message;
       } finally {
         $btn.disabled = false;
-        $status.textContent = "";
+        $btn.textContent = "Search";
       }
     }
 
@@ -98,8 +167,10 @@
         return;
       }
 
-      $meta.textContent =
-        `${data.entities.length} results · ${data.search_results_count} sources · ${data.processing_time.toFixed(1)}s`;
+      $meta.innerHTML =
+        `<span>${data.entities.length} results</span>` +
+        `<span>${data.search_results_count} sources</span>` +
+        `<span>${data.processing_time.toFixed(1)}s</span>`;
 
       if (!data.entities.length) {
         $results.innerHTML = "<p>No entities found.</p>";
@@ -109,8 +180,16 @@
       renderTable(data.columns, data.entities);
     }
 
+    const linkSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+      <path d="M6.22 8.72a.75.75 0 0 0 1.06 1.06l5.22-5.22v1.69a.75.75 0 0 0 1.5 0v-3.5a.75.75 0 0 0-.75-.75h-3.5a.75.75 0 0 0 0 1.5h1.69L6.22 8.72Z"/>
+      <path d="M3.5 6.75c0-.69.56-1.25 1.25-1.25H7A.75.75 0 0 0 7 4H4.75A2.75 2.75 0 0 0 2 6.75v4.5A2.75 2.75 0 0 0 4.75 14h4.5A2.75 2.75 0 0 0 12 11.25V9a.75.75 0 0 0-1.5 0v2.25c0 .69-.56 1.25-1.25 1.25h-4.5c-.69 0-1.25-.56-1.25-1.25v-4.5Z"/>
+    </svg>`;
+
+    function esc(s) {
+      let d = document.createElement("div"); d.textContent = s; return d.innerHTML;
+    }
+
     function renderTable(columns, entities) {
-      // Build rows from attributes
       let rows = entities.map((e) => {
         let row = {};
         columns.forEach((c) => { row[c] = e.attributes[c] ?? ""; });
@@ -118,12 +197,10 @@
         return row;
       });
 
-      // Sort if active
       if (sortCol) {
         rows.sort((a, b) => {
           let va = (a[sortCol] ?? "").toString().toLowerCase();
           let vb = (b[sortCol] ?? "").toString().toLowerCase();
-          // try numeric
           let na = parseFloat(va.replace(/[^0-9.\-]/g, ""));
           let nb = parseFloat(vb.replace(/[^0-9.\-]/g, ""));
           if (!isNaN(na) && !isNaN(nb)) return sortAsc ? na - nb : nb - na;
@@ -131,26 +208,35 @@
         });
       }
 
-      let html = "<table><thead><tr>";
+      let html = '<div class="table-wrap"><table><thead><tr>';
       columns.forEach((c) => {
-        let arrow = sortCol === c ? (sortAsc ? " ↑" : " ↓") : "";
-        html += `<th onclick="toggleSort('${c}')">${c}${arrow}</th>`;
+        let isSorted = sortCol === c;
+        let arrow = isSorted ? (sortAsc ? "\u2191" : "\u2193") : "\u2195";
+        let cls = isSorted ? ' class="sorted"' : '';
+        let label = c.replace(/_/g, " ");
+        html += `<th${cls} onclick="toggleSort('${c}')">${esc(label)}<span class="arrow">${arrow}</span></th>`;
       });
       html += "</tr></thead><tbody>";
+
       rows.forEach((row) => {
         html += "<tr>";
         columns.forEach((c) => {
           let val = row[c] ?? "";
           let src = row._sources[c];
+          html += "<td>";
           if (src) {
-            html += `<td><a href="${src}" target="_blank" title="${src}">${val}</a></td>`;
+            html += `<div class="cell-content">`;
+            html += `<span class="cell-text">${esc(String(val))}</span>`;
+            html += `<a class="src-link" href="${esc(src)}" target="_blank" rel="noopener" title="Source">${linkSVG}</a>`;
+            html += `</div>`;
           } else {
-            html += `<td>${val}</td>`;
+            html += esc(String(val));
           }
+          html += "</td>";
         });
         html += "</tr>";
       });
-      html += "</tbody></table>";
+      html += "</tbody></table></div>";
       $results.innerHTML = html;
     }
 

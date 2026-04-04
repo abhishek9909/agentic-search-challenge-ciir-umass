@@ -7,7 +7,6 @@ import time
 import logging
 from dataclasses import dataclass, field, asdict
 from typing import Optional
-from dotenv import load_dotenv
 
 # ── Logging ──────────────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -33,7 +32,13 @@ class Config:
     scrape_delay: float = 0.5          # politeness delay between scrapes
 
     def __post_init__(self):
-        load_dotenv()
+        # Load .env file for local dev; no-op on Render/Railway where
+        # env vars are set in the dashboard
+        try:
+            from dotenv import load_dotenv
+            load_dotenv()
+        except ImportError:
+            pass
         self.anthropic_api_key = self.anthropic_api_key or os.getenv("ANTHROPIC_API_KEY", "")
         self.tavily_api_key = self.tavily_api_key or os.getenv("TAVILY_API_KEY", "")
 
