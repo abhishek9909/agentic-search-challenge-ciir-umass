@@ -110,7 +110,8 @@ def truncate_text(text: str, max_chars: int) -> str:
 
 
 def safe_json_parse(text: str) -> Optional[dict | list]:
-    """Try to parse JSON from LLM output, handling common issues."""
+    """Try to parse JSON from LLM output, handling common issues
+    including markdown fences and truncated responses."""
     import re
 
     cleaned = text.strip()
@@ -137,6 +138,36 @@ def safe_json_parse(text: str) -> Optional[dict | list]:
                 return json.loads(cleaned[start:end + 1])
             except json.JSONDecodeError:
                 continue
+
+    # Strategy 4: Truncated JSON array repair
+    # If the LLM ran out of tokens mid-array, extract all complete objects
+    arr_start = cleaned.find("[")
+    if arr_start >= 0:
+        array_text = cleaned[arr_start + 1:]
+        complete_objects = []
+        # Find each complete {...} block using brace counting
+        depth = 0
+        obj_start = None
+        for i, ch in enumerate(array_text):
+            if ch == "{" and depth == 0:
+                obj_start = i
+            if ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0 and obj_start is not None:
+                    obj_str = array_text[obj_start:i + 1]
+                    try:
+                        complete_objects.append(json.loads(obj_str))
+                    except json.JSONDecodeError:
+                        pass
+                    obj_start = None
+        if complete_objects:
+            logger.warning(
+                f"Repaired truncated JSON: recovered {len(complete_objects)} "
+                f"complete objects from truncated response"
+            )
+            return complete_objects
 
     return None
 

@@ -82,7 +82,7 @@ def extract_entities(
     try:
         response = client.messages.create(
             model=config.llm_model,
-            max_tokens=4096,
+            max_tokens=8192,
             system=prompt,
             messages=[
                 {
