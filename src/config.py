@@ -24,7 +24,7 @@ class Config:
 
     anthropic_api_key: str = ""
     tavily_api_key: str = ""
-    llm_model: str = "claude-haiku-4-5-20251001"
+    llm_model: str = "claude-sonnet-4-5-20250929" # "claude-haiku-4-5-20251001"
     max_search_results: int = 10       # how many URLs to fetch from Tavily
     max_entities: int = 50             # cap on entities in final table
     max_content_chars: int = 15000     # max chars per page to send to LLM

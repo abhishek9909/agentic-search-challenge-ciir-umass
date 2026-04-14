@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CIIR Agentic Search Challenge</title>
+  <title>Agentic Search</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -16,13 +16,15 @@
 
     /* ── Search bar ─────────────────────────────────── */
     .search-bar {
-      display: flex; gap: 8px; margin-bottom: 24px;
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      margin-bottom: 24px;
       background: #fff; padding: 8px; border-radius: 10px;
       border: 1px solid #e0e4ea;
       box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
     .search-bar input[type="text"] {
-      flex: 1; padding: 10px 14px; font-size: 15px;
+      flex: 1 1 260px; min-width: 0;
+      padding: 10px 14px; font-size: 15px;
       border: none; outline: none; background: transparent;
     }
     .search-bar label {
@@ -32,6 +34,7 @@
     }
     .search-bar label input[type="checkbox"] { accent-color: #4f6df5; }
     .search-bar button {
+      flex-shrink: 0;
       padding: 10px 22px; font-size: 14px; font-weight: 500; cursor: pointer;
       background: #4f6df5; color: #fff; border: none; border-radius: 7px;
       transition: background 0.15s;
@@ -100,9 +103,12 @@
   </style>
 </head>
 <body>
-  <h1>&#x1F50D; CIIR Agentic Search Challenge</h1>
+  <h1>&#x1F50D; Agentic Search</h1>
   <div class="search-bar">
     <input id="query" type="text" placeholder='Try "AI startups in healthcare" or "best pizza in Brooklyn"' />
+    <label>
+      <input type="checkbox" id="spf" /> Strict Filter
+    </label>
     <label>
       <input type="checkbox" id="rb" /> Review Bomb
     </label>
@@ -142,10 +148,11 @@
 
       try {
         const rb = document.getElementById("rb").checked;
+        const spf = document.getElementById("spf").checked;
         const res = await fetch(API + "/search", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query, review_bomb: rb }),
+          body: JSON.stringify({ query, review_bomb: rb, strict_post_filter: spf }),
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();

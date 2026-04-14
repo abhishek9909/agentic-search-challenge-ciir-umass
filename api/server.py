@@ -41,6 +41,7 @@ FRONTEND_DIR = os.path.join(
 class SearchRequest(BaseModel):
     query: str
     review_bomb: bool = False
+    strict_post_filter: bool = False
 
 
 @app.get("/health")
@@ -58,7 +59,12 @@ def search(req: SearchRequest):
     except ValueError as e:
         raise HTTPException(500, str(e))
 
-    result = run(req.query.strip(), config, enable_review_bomb=req.review_bomb)
+    result = run(
+        req.query.strip(),
+        config,
+        enable_review_bomb=req.review_bomb,
+        enable_strict_post_filter=req.strict_post_filter,
+    )
     return result.to_dict()
 
 
@@ -69,4 +75,5 @@ def index():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)

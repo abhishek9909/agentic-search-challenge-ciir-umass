@@ -30,18 +30,47 @@ INVALID (not topic queries):
 
 For VALID topic queries, you must also:
 1. Identify the entity type (restaurant, company, tool, person, etc.)
-2. Decompose COMPLEX queries into search_terms vs post_filters:
-   - search_terms: the core query to search the web with
-   - post_filters: additional constraints that are HARDER to search for directly
-     and should be verified AFTER retrieving results using LLM analysis
+2. Decompose the query AGGRESSIVELY into search_terms + post_filters:
+   - search_terms: the MINIMAL core noun phrase that captures what kind of
+     entity we're looking for. Keep this SHORT and BROAD.
+   - post_filters: EVERY constraint that narrows the results. Be generous —
+     when in doubt, make it a filter. Filters get verified later via per-entity
+     search, so they don't need to be search-engine-friendly.
    
-   Example: "Asian restaurants in Chicago that serve halal food"
-   → search_terms: "Asian restaurants in Chicago"
+   Put these in POST_FILTERS (not search_terms):
+   - Numeric/quantitative constraints: "> 10M funding", "under $50", "4+ stars", "500+ reviews"
+   - Country or region constraints when they're country-scale or larger: "in US", "in Europe", "based in Asia"
+   - Feature/attribute constraints: "open source", "serves halal", "has outdoor seating", "accepts Medicaid"
+   - Time constraints: "founded after 2020", "raised in 2024"
+   - Scale/size constraints: "Fortune 500", "small startups", "publicly traded"
+   
+   Keep in SEARCH_TERMS only:
+   - The core entity type noun phrase: "search engine startups", "pizza restaurants", "database tools"
+   - Very specific city/neighborhood names when they are the PRIMARY locator:
+     "pizza in Brooklyn" → search: "pizza Brooklyn". But country-level ("in US")
+     should still be a filter because US is too broad to narrow the search.
+   
+   Examples:
+   
+   Query: "search engine startups in US that get more than 10M funding"
+   → search_terms: "search engine startups"
+   → post_filters: ["based in US", "funding > $10M"]
+   
+   Query: "Asian restaurants in Chicago that serve halal food"
+   → search_terms: "Asian restaurants Chicago"
    → post_filters: ["serves halal food"]
    
-   The rule: if a constraint is an uncommon attribute that search engines won't 
-   reliably filter on, make it a post_filter. Location, cuisine type, and primary 
-   category should stay in search_terms.
+   Query: "open source database tools written in Rust"
+   → search_terms: "open source database tools"
+   → post_filters: ["written in Rust"]
+   
+   Query: "top pizza places in Brooklyn"
+   → search_terms: "top pizza places Brooklyn"
+   → post_filters: []
+   
+   Query: "AI startups in healthcare with Series A funding"
+   → search_terms: "AI healthcare startups"
+   → post_filters: ["raised Series A funding"]
 
 3. Suggest 4-7 relevant columns for the output table.
 

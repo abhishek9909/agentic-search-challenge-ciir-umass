@@ -7,6 +7,7 @@ Ties together all stages of the agentic search pipeline:
   C. Content Parsing → enrich content via scraping if needed
   C2. Entity Extraction → LLM extracts structured table from content
   D. Post-Filtering → LLM verifies entities against complex constraints
+       (or D-strict: per-entity constraint search + scoring + re-rank)
   E. Review Bomb (optional) → search reviews per entity, re-rank by popularity
 
 This module provides both a step-by-step API and a single run() function.
@@ -18,6 +19,7 @@ from .web_searcher import search_web
 from .content_parser import enrich_content
 from .entity_extractor import extract_entities
 from .post_filter import apply_post_filters
+from .strict_post_filter import strict_post_filter
 from .review_bomb import review_bomb
 
 
@@ -25,6 +27,7 @@ def run(
     query: str,
     config: Config | None = None,
     enable_review_bomb: bool = False,
+    enable_strict_post_filter: bool = False,
 ) -> PipelineResult:
     """
     Run the full agentic search pipeline on a query.
@@ -84,8 +87,19 @@ def run(
 
     # ── Stage D: Post-filter (for complex queries) ───────────────────────
     if analysis.post_filters:
-        with Timer("Stage D: Post-Filtering"):
-            entities = apply_post_filters(entities, analysis.post_filters, config)
+        if enable_strict_post_filter:
+            with Timer("Stage D-strict: Strict Post Filter"):
+                entities, strict_cols = strict_post_filter(
+                    entities, analysis.post_filters, config
+                )
+                # Add constraint columns to schema (after name if present)
+                for col in reversed(strict_cols):
+                    if col not in columns:
+                        name_idx = columns.index("name") + 1 if "name" in columns else len(columns)
+                        columns.insert(name_idx, col)
+        else:
+            with Timer("Stage D: Post-Filtering"):
+                entities = apply_post_filters(entities, analysis.post_filters, config)
 
     # ── Stage E: Review Bomb (optional) ──────────────────────────────────
     if enable_review_bomb and entities:
